@@ -27,7 +27,7 @@
 - Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/springboot-microservices.git
+   git clone https://github.com/rexprimer/ecommerce-app
 - Create a MySQL Database:Run the following SQL command to create the database:sql Copy code
 
 - Configure Database Connection: Update the application.properties in the Customer and Product services to match your MySQL credentials if needed.
