@@ -1,0 +1,232 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="#product">Products</a></li>
+                <li><a href="#customer">Customers</a></li>
+                <li><a href="#order">Orders</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="products">
+            <h2>Products</h2>
+            <div id="product-list"></div>
+        </section>
+
+        <section id="customers">
+            <h2>Customers</h2>
+            <div id="customer-list"></div>
+        </section>
+
+        <section id="orders">
+            <h2>Orders</h2>
+            <div id="order-list"></div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>E-commerce Dashboard</h1>
+
+        <div class="section" id="product-section">
+            <h2>Products</h2>
+            <button onclick="fetchProducts()">Fetch All Products</button>
+            <table id="product-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="section" id="customer-section">
+            <h2>Customers</h2>
+            <button onclick="fetchCustomers()">Fetch All Customers</button>
+            <table id="customer-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="section" id="order-section">
+            <h2>Orders</h2>
+            <button onclick="fetchOrders()">Fetch All Orders</button>
+            <table id="order-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer ID</th>
+                        <th>Product IDs</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const baseUrl = 'http://localhost:9000'; // API Gateway URL
+    
+        async function fetchProducts() {
+            try {
+                const response = await fetch(`${baseUrl}/product/getAll`);
+                const products = await response.json();
+                openNewTabWithResults('Products', products);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        }
+    
+        async function fetchCustomers() {
+            try {
+                const response = await fetch(`${baseUrl}/customer/getAll`);
+                const customers = await response.json();
+                openNewTabWithResults('Customers', customers);
+            } catch (error) {
+                console.error('Error fetching customers:', error);
+            }
+        }
+    
+        async function fetchOrders() {
+            try {
+                const response = await fetch(`${baseUrl}/order`);
+                const orders = await response.json();
+                openNewTabWithResults('Orders', orders);
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+            }
+        }
+    
+        function openNewTabWithResults(title, data) {
+            // Create a new window
+            const newWindow = window.open('', '_blank');
+            
+            // Prepare the content to be displayed in the new window
+            newWindow.document.write(`
+                <html>
+                <head>
+                    <title>${title}</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            margin: 20px;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-bottom: 20px;
+                        }
+                        th, td {
+                            border: 1px solid #ddd;
+                            padding: 8px;
+                            text-align: left;
+                        }
+                        th {
+                            background-color: #f4f4f4;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>${title}</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                ${Object.keys(data[0] || {}).map(key => `<th>${key}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map(item => `
+                                <tr>
+                                    ${Object.values(item).map(value => `<td>${value}</td>`).join('')}
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </body>
+                </html>
+            `);
+            newWindow.document.close();
+        }
+    </script>
+    
+
+    </html>
+
